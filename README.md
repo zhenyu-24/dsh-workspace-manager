@@ -1,5 +1,25 @@
 # DSH 工作区管理 · Workspace Manager
 
+[![CI](https://github.com/zhenyu-24/dsh-workspace-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/zhenyu-24/dsh-workspace-manager/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/zhenyu-24/dsh-workspace-manager)](https://github.com/zhenyu-24/dsh-workspace-manager/releases) [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
+> 工作区与会话集中管理，额外源目录清晰可控。安装包包含可运行的 dist，无需用户自行构建。
+
+[安装与迁移](./docs/installation.md) · [开发指南](./docs/development.md) · [验收记录](./docs/validation.md) · [更新记录](./CHANGELOG.md)
+
+## 工程结构
+
+```text
+src/host/          宿主入口、业务操作、会话目录
+src/client/        原生 JavaScript / React 界面
+tests/             业务与集成测试
+scripts/           构建、导出校验和打包检查
+docs/              安装、开发及本地验收记录
+.github/workflows/ 跨平台检查和标签发行
+dist/              本地生成；随安装包分发，不提交源码仓库
+```
+
+截图尚未收录：仅接受实际运行界面截图，不使用模拟界面冒充验证。
+
 DeepSeek Harness (DSH) 的独立侧栏插件，管理工作区、会话和额外源文件夹，不替换原工作区列表。
 
 ## 功能
@@ -35,11 +55,11 @@ DeepSeek Harness (DSH) 的独立侧栏插件，管理工作区、会话和额外
 ```bash
 git clone https://github.com/zhenyu-24/dsh-workspace-manager.git
 cd dsh-workspace-manager
-npm install
+npm ci
 npm run check
 ```
 
-再通过 DSH 的 `plugin_manager install_bundle` 安装此仓库的绝对路径。不要手工编辑 profile 的配置文件。源码采用普通 JavaScript，不需要构建。
+再通过 DSH 的 `plugin_manager install_bundle` 安装此仓库的绝对路径。不要手工编辑 profile 的配置文件。源码采用普通 JavaScript；`npm run check` 会将源码复制到 dist 并校验，不需要额外打包器。
 
 本仓库尚未发布到 npm，不能假定 `npm install @zhenyu-24/dsh-workspace-manager` 可用。
 
@@ -65,10 +85,9 @@ npm run check
 Node.js >=22.19，依赖 `zod` ^4。建议在独立仓库中安装依赖，不在 DSH profile 中手工运行包管理器。
 
 ```bash
-npm install
+npm ci
 npm run check
-npm pack --dry-run
-npm pack
+npm run pack:release
 ```
 
 测试覆盖源目录校验、版本冲突、保存回滚、批量去重/归属/部分失败、会话日志保留及 Explorer 回调/错误处理。测试通过不等同所有宿主版本或桌面可见性端到端验证通过。

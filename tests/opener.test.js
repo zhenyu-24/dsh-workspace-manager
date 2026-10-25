@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { openFolder } from './operations.js';
+import { openFolder } from '../src/host/operations.js';
 test('Explorer is visible, URI-safe and awaits handoff rather than spawn', async()=>{
   let done;
   const pending=openFolder('D:\\项目,a=b\\some folder',{platform:'win32',run:(command,args,options,callback)=>{

@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Check tag matches package version
+        shell: bash
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          expected="v$(node -p "JSON.parse(require('node:fs').readFileSync('package.json', 'utf8')).version")"
+          if [ "$TAG" != "$expected" ]; then
+            echo "Tag $TAG does not match package version $expected" >&2
+            exit 1
+          fi
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build, test and verify package
+        run: npm run check
+      - name: Pack release archive
+        run: npm run pack:release
+      - name: Create release without overwriting existing assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: gh release create "$TAG" artifacts/*.tgz artifacts/SHA256SUMS.txt --verify-tag --notes-file CHANGELOG.md

@@ -1,6 +1,6 @@
 {
   "name": "@zhenyu-24/dsh-workspace-manager",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "description": "Workspace and session management for DeepSeek Harness / DSH 工作区管理",
@@ -9,9 +9,14 @@
   "repository": { "type": "git", "url": "git+https://github.com/zhenyu-24/dsh-workspace-manager.git" },
   "homepage": "https://github.com/zhenyu-24/dsh-workspace-manager#readme",
   "bugs": { "url": "https://github.com/zhenyu-24/dsh-workspace-manager/issues" },
-  "exports": { ".": "./host.js", "./client": "./client.js", "./locale/*.json": "./locale/*.json", "./icon": "./icon.svg" },
-  "files": ["host.js", "operations.js", "catalog.js", "client.js", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "CHANGELOG.md"],
-  "scripts": { "test": "node --test operations.test.js batch.test.js opener.test.js", "check": "node --check host.js && node --check client.js && npm test" },
+  "exports": { ".": "./dist/host/index.js", "./client": "./dist/client/index.js", "./locale/*.json": "./locale/*.json", "./icon": "./icon.svg" },
+  "files": ["dist/", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "CHANGELOG.md", "LICENSE", "docs/"],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.js",
+    "check": "npm run build && npm test && node scripts/verify-package.mjs",
+    "pack:release": "node scripts/pack-release.mjs"
+  },
   "engines": { "node": ">=22.19.0" },
   "peerDependencies": { "zod": "^4.0.0" },
   "dsh": { "bundle": { "patch": "./cordis.patch.yml" }, "client": { "platform": "web", "immediately": true, "inject": ["@deepseek-ai/dsh-client-ui-sidebar", "@deepseek-ai/dsh-client-ui-workspace"] } }

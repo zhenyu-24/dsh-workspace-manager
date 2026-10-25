@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createOperations } from './operations.js';
+import { createOperations } from '../src/host/operations.js';
 test('counts exclude archives, batch deduplicates and isolates failures, deletion preserves sessions', async () => {
  const archived=new Set(['b']); const calls=[]; const map=new Map();
  const w={id:'w',title:'Work',path:process.cwd(),sessionIds:['a','b','c'],async setTitle(t){this.title=t;}};

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { createOperations } from './operations.js';
+import { createOperations } from '../src/host/operations.js';
 
 test('workspace source operations validate, persist, deduplicate and reject stale writes', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'wse-test-'));
